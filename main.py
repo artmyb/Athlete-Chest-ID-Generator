@@ -80,30 +80,37 @@ def create_pdf(numbers, image_path, filename="output.pdf", font_size=300):
     num_pages = ceil(len(numbers) / 2)
 
     if background_image:
-        image = Image.open(background_image)
-        image = image.resize((int(section_width), int(section_height)))
-
+        try:
+            image = Image.open(background_image)
+            image = image.resize((int(section_width), int(section_height)))  # Resize image to fit the section
+        except Exception as e:
+            print(f"Error loading image: {e}")
+            image = None
     for page in range(num_pages):
         if 2 * page < len(numbers):
-            if background_image:
-                c.drawImage(image_path, 0.05*width, height / 2 + 0.05*height, width=section_width*0.9, height=section_height*0.9)
+            if image:
+                c.drawImage(image_path, 0.05 * width, height / 2 + 0.05 * height, width=section_width * 0.9, height=section_height * 0.9)
 
             c.setFont("Helvetica", font_size)
             text_width = c.stringWidth(str(numbers[2 * page]), "Helvetica", font_size)
-            c.drawString((width - text_width) / 2, height / 2 + (section_height - 0.5*font_size) / 2, str(numbers[2 * page]))
+            c.drawString((width - text_width) / 2, height / 2 + (section_height - 0.5 * font_size) / 2, str(numbers[2 * page]))
 
         if 2 * page + 1 < len(numbers):
-            if background_image:
-                c.drawImage(image_path, 0.05*width, 0.05*height, width=0.9*section_width, height=0.9*section_height)
+            if image:
+                c.drawImage(image_path, 0.05 * width, 0.05 * height, width=0.9 * section_width, height=0.9 * section_height)
 
             c.setFont("Helvetica", font_size)
             text_width = c.stringWidth(str(numbers[2 * page + 1]), "Helvetica", font_size)
-            c.drawString((width - text_width) / 2, (section_height - 0.5*font_size) / 2, str(numbers[2 * page + 1]))
+            c.drawString((width - text_width) / 2, (section_height - 0.5 * font_size) / 2, str(numbers[2 * page + 1]))
+
+        c.setDash(6, 3)
+        c.setStrokeColorRGB(0, 0, 0)
+        center_y = height / 2
+        c.line(0, center_y, width, center_y)
+
         c.showPage()
 
-
     c.save()
-
 
 
 def generate():

@@ -1,3 +1,5 @@
+#pyinstaller main.py --onefile --windowed --icon "icon.ico" --name "AthleteID"
+
 import tkinter as tk
 from functools import partial
 import numpy as np
@@ -86,6 +88,8 @@ def create_pdf(numbers, image_path, filename="output.pdf", font_size=300):
         except Exception as e:
             print(f"Error loading image: {e}")
             image = None
+    else:
+        image = None
     for page in range(num_pages):
         if 2 * page < len(numbers):
             if image:
@@ -125,7 +129,7 @@ def generate():
                 for j in np.arange(int(i[3].get()),  int(i[5].get())+increment,  increment):
                     numbers.append(int(j))
 
-    file_name = filedialog.asksaveasfile(filetypes=(("PDF files", "*.pdf"), ("All Files", "*.*")))
+    file_name = filedialog.asksaveasfile(title = "Save file as", defaultextension=".pdf", filetypes=(("PDF files", "*.pdf"), ("All Files", "*.*")))
     file_name = file_name.name
     if not "pdf" in file_name:
         file_name += ".pdf"

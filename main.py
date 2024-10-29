@@ -1,5 +1,8 @@
-#pyinstaller main.py --onefile --windowed --icon "icon.ico" --name "AthleteID"
-
+"""
+Title: AthleteID
+Author: Murat Yaşar Baskın
+Purpose: Generates chest IDs for sports events in A5 size, in A4 PDF format, two IDs in each page
+"""
 import tkinter as tk
 from functools import partial
 import numpy as np
@@ -95,7 +98,7 @@ def create_pdf(numbers, image_path, filename="output.pdf", font_size=300):
             if image:
                 c.drawImage(image_path, 0.05 * width, height / 2 + 0.05 * height, width=section_width * 0.9, height=section_height * 0.9)
 
-            c.setFont("Helvetica", font_size)
+            c.setFont("Helvetica-Bold", font_size)
             text_width = c.stringWidth(str(numbers[2 * page]), "Helvetica", font_size)
             c.drawString((width - text_width) / 2, height / 2 + (section_height - 0.5 * font_size) / 2, str(numbers[2 * page]))
 
@@ -103,7 +106,7 @@ def create_pdf(numbers, image_path, filename="output.pdf", font_size=300):
             if image:
                 c.drawImage(image_path, 0.05 * width, 0.05 * height, width=0.9 * section_width, height=0.9 * section_height)
 
-            c.setFont("Helvetica", font_size)
+            c.setFont("Helvetica-Bold", font_size)
             text_width = c.stringWidth(str(numbers[2 * page + 1]), "Helvetica", font_size)
             c.drawString((width - text_width) / 2, (section_height - 0.5 * font_size) / 2, str(numbers[2 * page + 1]))
 

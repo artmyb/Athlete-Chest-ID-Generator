@@ -1,5 +1,5 @@
 # Athlete-Chest-ID-Generator
-Generates large amounts of chest IDs of a5 size as a a4 PDF file, two IDs for each page.
+Generates large amounts of chest IDs of a5 size as an a4 PDF file, two IDs per page.
 
 ![ıdgnerg](https://github.com/user-attachments/assets/fb4cf930-2dd3-4626-a3e8-70d8c6428527)
 

@@ -4,6 +4,7 @@ Author: Murat Yaşar Baskın
 Purpose: Generates chest IDs for sports events in custom size, in custom or metric size PDF format.
 """
 
+
 import tkinter as tk
 from tkinter import ttk
 from functools import partial
@@ -115,8 +116,12 @@ def create_pdf(numbers, background_image, filename="output.pdf", font_size = 100
 
             c.showPage()
     else:
-        pdf_width = 28.35*100*(2**(-1/4))*2**(-0.5*int(layout_combobox.get()[-1]))
-        pdf_height = 28.35*100*(2**(1/4))* 2 ** (-0.5 * int(layout_combobox.get()[-1]))
+        if orientation_var.get() == False:
+            pdf_width = 28.35*100*(2**(-1/4))*2**(-0.5*int(layout_combobox.get()[-1]))
+            pdf_height = 28.35*100*(2**(1/4))* 2 ** (-0.5 * int(layout_combobox.get()[-1]))
+        else:
+            pdf_width = 28.35*100*(2**(1/4))* 2 ** (-0.5 * int(layout_combobox.get()[-1]))
+            pdf_height = 28.35*100*(2**(-1/4))*2**(-0.5*int(layout_combobox.get()[-1]))
         c = pdfcanvas.Canvas(filename, pagesize=(pdf_width, pdf_height))
         width, height = 28.35 * float(width_entry.get()), 28.35 * float(height_entry.get())
         columns = (pdf_width - 2*28.35*float(layout_margin_combobox.get()))//width -1
@@ -144,7 +149,13 @@ def create_pdf(numbers, background_image, filename="output.pdf", font_size = 100
                     print(image.size)
             c.setFont("Helvetica-Bold", font_size)
             text_width = c.stringWidth(str(i), "Helvetica-Bold", font_size)
-
+            if grid_var.get() == 1:
+                c.setDash(3, 6)
+                c.line(layout_offset_x,layout_offset_y, layout_offset_x + section_width, layout_offset_y)
+                c.line(layout_offset_x, layout_offset_y, layout_offset_x, layout_offset_y+ section_height)
+                c.line(layout_offset_x, layout_offset_y+ section_height, layout_offset_x+ section_width, layout_offset_y + section_height)
+                c.line(layout_offset_x+ section_width, layout_offset_y + section_height, layout_offset_x + section_width,
+                       layout_offset_y + section_height)
             try:
                 x_offset, y_offset = float(x_offset_entry.get()), float(y_offset_entry.get())
             except:
@@ -394,6 +405,9 @@ layout_frame.pack(side = "top")
 def layout_false():
     layout_combobox.config(state="disabled")
     layout_margin_combobox.config(state="disabled")
+    orientation_radio_0.config(state="disabled")
+    orientation_radio_1.config(state="disabled")
+    grid_tick.config(state="disabled")
     global layout_var
     layout_var.set(False)
     preview()
@@ -402,7 +416,10 @@ def layout_false():
 def layout_true():
     layout_combobox.config(state="normal")
     layout_margin_combobox.config(state="normal")
+    orientation_radio_0.config(state="normal")
+    orientation_radio_1.config(state="normal")
     layout_combobox.state(["readonly"])
+    grid_tick.config(state="normal")
     global layout_var
     layout_var.set(True)
     preview()
@@ -432,6 +449,23 @@ layout_combobox.config(state="disabled")
 layout_margin_combobox.config(state="disabled")
 
 
+layout2_frame = tk.Frame(root, height=50, width = 400)
+layout2_frame.pack(side = "top")
+orientation_var = tk.BooleanVar(value = False)
+orientation_radio_0 = tk.Radiobutton(layout2_frame, text = "Portrait", variable = orientation_var, value = False, command = preview)
+orientation_radio_0.pack(side = tk.LEFT)
+orientation_radio_1 = tk.Radiobutton(layout2_frame, text = "Landscape:", variable = orientation_var, value = True, command = preview)
+orientation_radio_1.pack(side = tk.LEFT)
+
+grid_var = tk.BooleanVar(value = False)
+grid_tick = tk.Checkbutton(layout2_frame, var = grid_var, text = "Grid", command = preview)
+grid_tick.pack(side = tk.LEFT)
+
+orientation_radio_0.config(state="disabled")
+orientation_radio_1.config(state="disabled")
+grid_tick.config(state="disabled")
+
+
 scroll_frame_parent = tk.Frame(root, width = 400)
 scroll_frame_parent.pack(side = "top", fill="y")
 
@@ -452,5 +486,3 @@ scrollbar.pack(side="right", fill="y")
 add_interval()
 preview()
 root.mainloop()
-
-

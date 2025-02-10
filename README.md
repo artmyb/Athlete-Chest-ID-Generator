@@ -1,5 +1,5 @@
 # Athlete-Chest-ID-Generator
-Generates large amounts of chest IDs of custom size PDF file, two IDs per page.
+Generates large amounts of chest IDs of custom size PDF file.
 
 ![image](https://github.com/user-attachments/assets/e20b8b0f-53ae-45a9-b46e-5f34ace25639)
 

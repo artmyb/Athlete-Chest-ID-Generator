@@ -1,9 +1,11 @@
 # Athlete-Chest-ID-Generator
 Generates large amounts of chest IDs of custom size PDF file.
 
-![image](https://github.com/user-attachments/assets/e20b8b0f-53ae-45a9-b46e-5f34ace25639)
+![image](https://github.com/user-attachments/assets/f1e6e020-7b6c-47e0-90b2-bd71f9ad38b9)
 
-The app is as simple as this.
+Hit "Imort Image" to add background image
+![image](https://github.com/user-attachments/assets/8817e61c-3dfc-45a6-b3d7-d49dd6d71ed3)
+
 # Width & Height:
 Dimensions of pages of the PDF file
 # Margins:
@@ -20,5 +22,9 @@ A good example:
 Then you have to input start value, stop value (is included in the range), and number of increments.
 Then hit "Generate" and you have a PDF of ID NOs.
 If you have to generate different intervals, hit "Add interval" and input start & end value for each interval.
-![image](https://github.com/user-attachments/assets/e0561b4d-9185-4545-847a-98ebb594eff2)
+![image](https://github.com/user-attachments/assets/b3c7cbd7-2d82-4ff9-81d6-806aeac54ac9)
+By default, the app creates a PDF with one ID per page where each page's dimensions are what is specified on the upper entries.
+
+You can enable "Fit into" to create PDF of larges size with many IDs in each page:
+![image](https://github.com/user-attachments/assets/83885a85-d2a6-49c7-9393-9cc414866c4c)
 

@@ -1,8 +1,9 @@
 """
 Title: AthleteID
 Author: Murat Yaşar Baskın
-Purpose: Generates chest IDs for sports events in A5 size, in A4 PDF format, two IDs in each page
+Purpose: Generates chest IDs for sports events in custom size, in custom or metric size PDF format.
 """
+
 import tkinter as tk
 from tkinter import ttk
 from functools import partial
@@ -54,6 +55,8 @@ def add_interval():
     intervals.append(interval)
 
     def delete(interval_no):
+        if interval_no == 0:
+            return
         intervals[interval_no][1].pack_forget()
         intervals[interval_no][-1] = False
 
@@ -63,15 +66,8 @@ def add_interval():
     return
 
 
-def create_pdf(numbers, background_image, filename="output.pdf", font_size = 10):
-    width, height = 28.35 * float(width_entry.get()), 28.35 * float(height_entry.get())
-    print(width, height)
-    c = pdfcanvas.Canvas(filename, pagesize=(width, height))
-    section_width = width
-    section_height = height
-
-    num_pages = ceil(len(numbers))
-
+def create_pdf(numbers, background_image, filename="output.pdf", font_size = 100):
+    print(layout_var)
     if background_image:
 
         image = Image.open(background_image)
@@ -84,30 +80,83 @@ def create_pdf(numbers, background_image, filename="output.pdf", font_size = 10)
         margin = 0.64
         margin_box.set("0.64")
 
-    for page in range(num_pages):
-        if image:
-            if aspect_var.get() == 0:
-                c.drawImage(background_image,28.35*margin, 28.35*margin, width=section_width - 2*28.35*margin, height=section_height - 2*28.35*margin)
-            else:
-                imgwidth, imgheight = image.size
-                if imgwidth / imgheight > section_width / section_height:
-                    c.drawImage(background_image, 28.35*margin, 0.5*section_height - 0.5*(section_width - 2*28.35*margin)*imgheight/imgwidth,
-                                width=section_width - 2*28.35*margin, height=(section_width - 2*28.35*margin)*imgheight/imgwidth)
+    if layout_var.get() == False:
+        width, height = 28.35 * float(width_entry.get()), 28.35 * float(height_entry.get())
+        print(width, height)
+        c = pdfcanvas.Canvas(filename, pagesize=(width, height))
+        section_width = width
+        section_height = height
+
+        num_pages = ceil(len(numbers))
+
+        for page in range(num_pages):
+            if image:
+                if aspect_var.get() == 0:
+                    c.drawImage(background_image,28.35*margin, 28.35*margin, width=section_width - 2*28.35*margin, height=section_height - 2*28.35*margin)
                 else:
-                    c.drawImage(background_image, 0.5*section_width - 0.5*(section_height - 2*28.35*margin)*imgwidth/imgheight, 28.35*margin,
-                                width=(section_height - 2*28.35*margin)*imgwidth/imgheight, height=section_height - 2*28.35*margin)
-                print(image.size)
-        c.setFont("Helvetica-Bold", font_size)
-        text_width = c.stringWidth(str(numbers[page]), "Helvetica-Bold", font_size)
+                    imgwidth, imgheight = image.size
+                    if imgwidth / imgheight > section_width / section_height:
+                        c.drawImage(background_image, 28.35*margin, 0.5*section_height - 0.5*(section_width - 2*28.35*margin)*imgheight/imgwidth,
+                                    width=section_width - 2*28.35*margin, height=(section_width - 2*28.35*margin)*imgheight/imgwidth)
+                    else:
+                        c.drawImage(background_image, 0.5*section_width - 0.5*(section_height - 2*28.35*margin)*imgwidth/imgheight, 28.35*margin,
+                                    width=(section_height - 2*28.35*margin)*imgwidth/imgheight, height=section_height - 2*28.35*margin)
+                    print(image.size)
+            c.setFont("Helvetica-Bold", font_size)
+            text_width = c.stringWidth(str(numbers[page]), "Helvetica-Bold", font_size)
 
-        try:
-            x_offset, y_offset = float(x_offset_entry.get()), float(y_offset_entry.get())
-        except:
-            x_offset, y_offset = 0, 0
-        c.drawString((0.5 * section_width - 0.5 * text_width) + x_offset*28.35, (0.5 * section_height - 0.36 * font_size)+y_offset*28.35, str(numbers[page]))
+            try:
+                x_offset, y_offset = float(x_offset_entry.get()), float(y_offset_entry.get())
+            except:
+                x_offset, y_offset = 0, 0
+            c.drawString((0.5 * section_width - 0.5 * text_width) + x_offset*28.35, (0.5 * section_height - 0.36 * font_size)+y_offset*28.35, str(numbers[page]))
 
-        c.showPage()
+            c.showPage()
+    else:
+        pdf_width = 28.35*100*(2**(-1/4))*2**(-0.5*int(layout_combobox.get()[-1]))
+        pdf_height = 28.35*100*(2**(1/4))* 2 ** (-0.5 * int(layout_combobox.get()[-1]))
+        c = pdfcanvas.Canvas(filename, pagesize=(pdf_width, pdf_height))
+        width, height = 28.35 * float(width_entry.get()), 28.35 * float(height_entry.get())
+        columns = (pdf_width - 2*28.35*float(layout_margin_combobox.get()))//width -1
+        rows = (pdf_height - 2 * 28.35 * float(layout_margin_combobox.get())) // height -1
+        section_width = width
+        section_height = height
+        page = 0
+        row = 0
+        column = 0
+        for i in numbers:
+            layout_offset_x = 28.35 * float(layout_margin_combobox.get()) + column * section_width
+            layout_offset_y = 28.35 * float(layout_margin_combobox.get()) + row * section_height
+            if image:
 
+                if aspect_var.get() == 0:
+                    c.drawImage(background_image,28.35*margin+ layout_offset_x, 28.35*margin+layout_offset_y, width=section_width - 2*28.35*margin, height=section_height - 2*28.35*margin)
+                else:
+                    imgwidth, imgheight = image.size
+                    if imgwidth / imgheight > section_width / section_height:
+                        c.drawImage(background_image, 28.35*margin+layout_offset_x, 0.5*section_height - 0.5*(section_width - 2*28.35*margin)*imgheight/imgwidth+layout_offset_y,
+                                    width=section_width - 2*28.35*margin, height=(section_width - 2*28.35*margin)*imgheight/imgwidth)
+                    else:
+                        c.drawImage(background_image, 0.5*section_width - 0.5*(section_height - 2*28.35*margin)*imgwidth/imgheight+layout_offset_x, 28.35*margin+layout_offset_y,
+                                    width=(section_height - 2*28.35*margin)*imgwidth/imgheight, height=section_height - 2*28.35*margin)
+                    print(image.size)
+            c.setFont("Helvetica-Bold", font_size)
+            text_width = c.stringWidth(str(numbers[page]), "Helvetica-Bold", font_size)
+
+            try:
+                x_offset, y_offset = float(x_offset_entry.get()), float(y_offset_entry.get())
+            except:
+                x_offset, y_offset = 0, 0
+            c.drawString((0.5 * section_width - 0.5 * text_width) + x_offset*28.35+layout_offset_x, (0.5 * section_height - 0.36 * font_size)+y_offset*28.35+layout_offset_y, str(i))
+            if column == columns and row == rows:
+                c.showPage()
+                row = 0
+                column = 0
+            elif column == columns:
+                row += 1
+                column = 0
+            else:
+                column += 1
     c.save()
 
 
@@ -158,8 +207,10 @@ def preview(event=0):
     file_path = "temp.pdf"
     if not file_path:
         return
-
-    doc = fitz.open(file_path)
+    try:
+        doc = fitz.open(file_path)
+    except:
+        return
     page = doc[0]
 
     zoom_x = 1
@@ -275,11 +326,11 @@ bottomframe.pack(side = "top")
 
 
 aspect_var = tk.BooleanVar()
-aspect_tick = tk.Checkbutton(bottomframe, text = "Maintain image aspect ratio", variable=aspect_var, command = preview)
+aspect_tick = tk.Checkbutton(bottomframe, text = "Maintain background image aspect ratio", variable=aspect_var, command = preview)
 aspect_tick.pack(side=tk.LEFT)
 
 
-font_label = tk.Label(bottomframe, text="                                 Font:")
+font_label = tk.Label(bottomframe, text="   Font Size:")
 font_label.pack(side=tk.LEFT)
 font_entry = tk.Entry(bottomframe, width=5)
 font_entry.pack(side=tk.LEFT)
@@ -319,7 +370,7 @@ def change_y_offset(event = 0):
     preview()
 
 
-x_offset_label = tk.Label(bottom2frame, text= "X-offset (cm):   ")
+x_offset_label = tk.Label(bottom2frame, text= "X-position offset (cm):")
 x_offset_label.pack(side = tk.LEFT)
 x_offset_entry = tk.Entry(bottom2frame, width=5)
 x_offset_entry.pack(side=tk.LEFT)
@@ -327,13 +378,51 @@ x_offset_entry.insert(0,"0.0")
 x_offset_entry.bind("<Return>", preview)
 x_offset_entry.bind("<MouseWheel>", change_x_offset)
 
-y_offset_label = tk.Label(bottom2frame, text= "                                Y-offset (cm):   ")
+y_offset_label = tk.Label(bottom2frame, text= "        Y-position offset (cm):")
 y_offset_label.pack(side = tk.LEFT)
 y_offset_entry = tk.Entry(bottom2frame, width=5)
 y_offset_entry.pack(side=tk.LEFT)
 y_offset_entry.insert(0,"0.0")
 y_offset_entry.bind("<Return>", preview)
 y_offset_entry.bind("<MouseWheel>", change_y_offset)
+
+layout_frame = tk.Frame(root, height=50, width = 400)
+layout_frame.pack(side = "top")
+
+def layout_false():
+    layout_combobox.config(state="disabled")
+    layout_margin_combobox.config(state="disabled")
+    global layout_var
+    layout_var.set(False)
+    return
+
+def layout_true():
+    layout_combobox.config(state="normal")
+    layout_margin_combobox.config(state="normal")
+    global layout_var
+    layout_var.set(True)
+    return
+
+layout_var = tk.BooleanVar(value = False)
+layout_radio_0 = tk.Radiobutton(layout_frame, text = "One ID/page", variable = layout_var, value = False, command= layout_false)
+layout_radio_0.pack(side = tk.LEFT)
+layout_radio_1 = tk.Radiobutton(layout_frame, text = "Fit into:", variable = layout_var, value = True, command= layout_true)
+layout_radio_1.pack(side = tk.LEFT)
+layout_var.set(False)
+
+layout_combobox = ttk.Combobox(layout_frame, values= ["A0","A1","A2","A3","A4","A5"], width= 3, state = "readonly")
+layout_combobox.set("A3")
+layout_combobox.pack(side=tk.LEFT)
+
+tk.Label(layout_frame, text = "   Margins (cm):").pack(side = tk.LEFT)
+
+layout_margin_combobox = ttk.Combobox(layout_frame, values= ["0.63","1.27","2.54"], width= 5)
+layout_margin_combobox.set("1.27")
+layout_margin_combobox.pack(side=tk.LEFT)
+
+layout_combobox.config(state="disabled")
+layout_margin_combobox.config(state="disabled")
+
 
 scroll_frame_parent = tk.Frame(root, width = 400)
 scroll_frame_parent.pack(side = "top", fill="y")
@@ -355,3 +444,4 @@ scrollbar.pack(side="right", fill="y")
 add_interval()
 preview()
 root.mainloop()
+

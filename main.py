@@ -43,12 +43,14 @@ def add_interval():
     interval_start_entry = tk.Entry(frame, width=10)
     interval_start_entry.pack(side=tk.LEFT)
     interval_start_entry.insert(0,"100")
+    interval_start_entry.bind("<Return>",preview)
 
     interval_end_label = tk.Label(frame, text="End:")
     interval_end_label.pack(side=tk.LEFT)
     interval_end_entry = tk.Entry(frame, width=10)
     interval_end_entry.pack(side=tk.LEFT)
     interval_end_entry.insert(0, "105")
+    interval_end_entry.bind("<Return>", preview)
 
     interval = [interval_no, frame, interval_start_label, interval_start_entry,
                 interval_end_label, interval_end_entry, True]
@@ -141,7 +143,7 @@ def create_pdf(numbers, background_image, filename="output.pdf", font_size = 100
                                     width=(section_height - 2*28.35*margin)*imgwidth/imgheight, height=section_height - 2*28.35*margin)
                     print(image.size)
             c.setFont("Helvetica-Bold", font_size)
-            text_width = c.stringWidth(str(numbers[page]), "Helvetica-Bold", font_size)
+            text_width = c.stringWidth(str(i), "Helvetica-Bold", font_size)
 
             try:
                 x_offset, y_offset = float(x_offset_entry.get()), float(y_offset_entry.get())
@@ -250,7 +252,7 @@ def change_fontsize(event):
     preview()
 
 def change_width(event):
-    value = int(width_entry.get())
+    value = int(float(width_entry.get())+0.5)
     if not value:
         value = 18
     if event.delta > 0:
@@ -264,7 +266,7 @@ def change_width(event):
     preview()
 
 def change_height(event):
-    value = int(height_entry.get())
+    value = int(float(height_entry.get())+0.5)
     if not value:
         value = 14
     if event.delta > 0:
@@ -394,13 +396,16 @@ def layout_false():
     layout_margin_combobox.config(state="disabled")
     global layout_var
     layout_var.set(False)
+    preview()
     return
 
 def layout_true():
     layout_combobox.config(state="normal")
     layout_margin_combobox.config(state="normal")
+    layout_combobox.state(["readonly"])
     global layout_var
     layout_var.set(True)
+    preview()
     return
 
 layout_var = tk.BooleanVar(value = False)
@@ -411,14 +416,17 @@ layout_radio_1.pack(side = tk.LEFT)
 layout_var.set(False)
 
 layout_combobox = ttk.Combobox(layout_frame, values= ["A0","A1","A2","A3","A4","A5"], width= 3, state = "readonly")
+layout_combobox.state(["readonly"])
 layout_combobox.set("A3")
 layout_combobox.pack(side=tk.LEFT)
+layout_combobox.bind("<<ComboboxSelected>>",preview)
 
 tk.Label(layout_frame, text = "   Margins (cm):").pack(side = tk.LEFT)
 
 layout_margin_combobox = ttk.Combobox(layout_frame, values= ["0.63","1.27","2.54"], width= 5)
 layout_margin_combobox.set("1.27")
 layout_margin_combobox.pack(side=tk.LEFT)
+layout_margin_combobox.bind("<<ComboboxSelected>>",preview)
 
 layout_combobox.config(state="disabled")
 layout_margin_combobox.config(state="disabled")
@@ -444,4 +452,5 @@ scrollbar.pack(side="right", fill="y")
 add_interval()
 preview()
 root.mainloop()
+
 

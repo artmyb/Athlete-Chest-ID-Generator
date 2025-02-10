@@ -23,8 +23,13 @@ Then you have to input start value, stop value (is included in the range), and n
 Then hit "Generate" and you have a PDF of ID NOs.
 If you have to generate different intervals, hit "Add interval" and input start & end value for each interval.
 ![image](https://github.com/user-attachments/assets/b3c7cbd7-2d82-4ff9-81d6-806aeac54ac9)
+
 By default, the app creates a PDF with one ID per page where each page's dimensions are what is specified on the upper entries.
+
+![image](https://github.com/user-attachments/assets/85f171e2-5003-4dc1-8a5a-8c0a32d2d534)
+
 
 You can enable "Fit into" to create PDF of larges size with many IDs in each page:
 ![image](https://github.com/user-attachments/assets/83885a85-d2a6-49c7-9393-9cc414866c4c)
 
+![image](https://github.com/user-attachments/assets/ecae972e-f8e6-4ef6-803b-739ba6eb0c88)

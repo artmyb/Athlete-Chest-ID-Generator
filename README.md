@@ -4,10 +4,14 @@ Generates large amounts of chest IDs of custom size PDF file.
 ![image](https://github.com/user-attachments/assets/e20b8b0f-53ae-45a9-b46e-5f34ace25639)
 
 The app is as simple as this.
-Width & Height: Dimensions of pages of the PDF file
-Margins: Side margins of each page
-"Maintain image aspect ratio": if not ticked, fits the background image into pages. if ticked, only fits the longer side and leaves equal gaps for the shorter side.
-X/Y-offset: position of ID numbers with respect to the center
+#Width & Height:
+Dimensions of pages of the PDF file
+#Margins:
+Side margins of each page
+#"Maintain image aspect ratio":
+if not ticked, fits the background image into pages. if ticked, only fits the longer side and leaves equal gaps for the shorter side.
+#X/Y-offset:
+position of ID numbers with respect to the center
 
 You can import a background image by "Import Image". The center of the BG image should be empty for the ID numbers.
 A good example:

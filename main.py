@@ -440,7 +440,7 @@ layout_combobox.bind("<<ComboboxSelected>>",preview)
 
 tk.Label(layout_frame, text = "   Margins (cm):").pack(side = tk.LEFT)
 
-layout_margin_combobox = ttk.Combobox(layout_frame, values= ["0.63","1.27","2.54"], width= 5)
+layout_margin_combobox = ttk.Combobox(layout_frame, values= ["0.64","1.27","2.54"], width= 5)
 layout_margin_combobox.set("1.27")
 layout_margin_combobox.pack(side=tk.LEFT)
 layout_margin_combobox.bind("<<ComboboxSelected>>",preview)
